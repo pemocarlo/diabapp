@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'gridDashboard.dart';
 
 void main() {
   runApp(MyApp());
@@ -82,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
           SizedBox(
             height: 40,
           ),
-         // GridDashboard()
+         GridDashboard()
         ],
       ),
     );
