@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'gridDashboard.dart';
+import 'package:diabapp/widgets/gridDashboard.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,7 +30,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Johny s Family",
+                      "Your entries",
                       style: GoogleFonts.openSans(
                           textStyle: TextStyle(
                               color: Colors.white,
@@ -60,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 4,
                     ),
                     Text(
-                      "Home",
+                      "Which updates do you have?",
                       style: GoogleFonts.openSans(
                           textStyle: TextStyle(
                               color: Color(0xffa29aac),
@@ -69,23 +68,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-                // IconButton(
-                //   alignment: Alignment.topCenter,
-                //   icon: Image.asset(
-                //     "assets/notification.png",
-                //     width: 24,
-                //   ),
-                //   onPressed: () {},
-                // )
+                IconButton(
+                  alignment: Alignment.topCenter,
+                  icon: Image.asset(
+                    "assets/images/notification.png",
+                    width: 24,
+                  ),
+                  onPressed: () {},
+                )
               ],
             ),
           ),
           SizedBox(
             height: 40,
           ),
-         GridDashboard()
+          GridDashboard(),                                  
         ],
       ),
     );
-  }
+  }                                                 
 }
