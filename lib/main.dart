@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:diabapp/pages/home.dart';
+import 'package:diabapp/pages/meal.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,9 +18,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/home',
       routes: {
-        // '/': (BuildContext context) => Loading(),
         '/home': (BuildContext context) => Home(),
-        // '/location': (BuildContext context) => Location(),
+        '/meal': (BuildContext context) => Meal(),
       }
     );
   }
