@@ -22,11 +22,17 @@ class _MealState extends State<Meal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff392850),
       appBar: AppBar(
         title: Text("Meals"),
       ),
       body: Center(
-        child: _image == null ? Text("empty image") : Image.file(_image),
+        child: _image == null
+            ? Text(
+                "empty image",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              )
+            : Image.file(_image),
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: getImage,
