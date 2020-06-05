@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:diabapp/widgets/index.dart' as myWidgets;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -24,7 +25,6 @@ class _MealState extends State<Meal> {
     return Scaffold(
       backgroundColor: Color(0xff392850),
       appBar: AppBar(
-        leading: Icon(Icons.menu),
         title: Text("Meals"),
       ),
       body: Center(
@@ -35,6 +35,7 @@ class _MealState extends State<Meal> {
               )
             : Image.file(_image),
       ),
+      drawer: myWidgets.MainDrawer(),
       floatingActionButton: FloatingActionButton(
           onPressed: getImage,
           tooltip: 'Pick Image',

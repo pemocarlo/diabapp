@@ -1,6 +1,5 @@
-import 'package:diabapp/widgets/mainDrawer.dart';
+import 'package:diabapp/widgets/index.dart';
 import 'package:flutter/material.dart';
-import 'package:diabapp/widgets/dashboard.dart';
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -11,6 +10,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

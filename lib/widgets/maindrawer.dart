@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
     Key key,
+    this.onTap,
   }) : super(key: key);
+
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class MainDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text('Drawer Header'),
+            child: Text('DiabApp'),
             decoration: BoxDecoration(
               color: Colors.blue,
             ),
@@ -28,7 +31,8 @@ class MainDrawer extends StatelessWidget {
               // Update the state of the app
               // ...
               // Then close the drawer
-              Navigator.pop(context);
+              Navigator.pushNamed(context, "/home");
+              // Navigator.pop(context);
             },
           ),
           ListTile(
@@ -40,7 +44,8 @@ class MainDrawer extends StatelessWidget {
               // Update the state of the app
               // ...
               // Then close the drawer
-              Navigator.pop(context);
+              Navigator.pushNamed(context, "/meal");
+              // Navigator.pop(context);
             },
           ),
           ListTile(
