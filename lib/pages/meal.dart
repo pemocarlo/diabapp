@@ -25,6 +25,7 @@ class _MealState extends State<Meal> {
     return Scaffold(
       backgroundColor: Color(0xff392850),
       appBar: AppBar(
+        leading: Icon(Icons.menu),
         title: Text("Meals"),
       ),
       body: Stack(children: <Widget>[

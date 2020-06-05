@@ -1,7 +1,7 @@
+import 'package:diabapp/widgets/mainDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:diabapp/widgets/gridDashboard.dart';
-
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -16,6 +16,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff392850),
+      appBar: AppBar(title: Text("Dashboard")),
       body: Column(
         children: <Widget>[
           SizedBox(
@@ -64,9 +65,12 @@ class _HomeState extends State<Home> {
           SizedBox(
             height: 40,
           ),
-          GridDashboard(),                                  
+          GridDashboard(),
         ],
       ),
+      drawer: MainDrawer(),
     );
-  }                                                 
+  }
 }
+
+
