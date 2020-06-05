@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:diabapp/widgets/index.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
@@ -28,11 +29,7 @@ class MainDrawer extends StatelessWidget {
             title: Text("Dashboard",
                 style: TextStyle(color: Colors.black, fontSize: 18)),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pushNamed(context, "/home");
-              // Navigator.pop(context);
+              onTap(DashBoard(), context);
             },
           ),
           ListTile(
@@ -41,31 +38,20 @@ class MainDrawer extends StatelessWidget {
               style: TextStyle(color: Colors.black, fontSize: 18),
             ),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pushNamed(context, "/meal");
-              // Navigator.pop(context);
+              onTap(Graphs(), context);
             },
           ),
           ListTile(
             title: Text("Personal Data",
                 style: TextStyle(color: Colors.black, fontSize: 18)),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
             },
           ),
           ListTile(
             title: Text("Schedule",
                 style: TextStyle(color: Colors.black, fontSize: 18)),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
+              onTap(Schedule(), context);
             },
           ),
         ],

@@ -10,14 +10,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Widget _currentBodyWidget = DashBoard();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff392850),
       appBar: AppBar(title: Text("Dashboard")),
-      body: DashBoard(),
-      drawer: MainDrawer(),
+      body: _currentBodyWidget,
+      drawer: MainDrawer(onTap: (bodyWidget, ctx) {
+        setState(() {
+          _currentBodyWidget = bodyWidget;
+          Navigator.pop(ctx);
+        });
+      }),
     );
   }
 }
