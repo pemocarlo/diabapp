@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
     Key key,
@@ -23,7 +22,8 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text('Item 1'),
+            title: Text("Dashboard",
+                style: TextStyle(color: Colors.black, fontSize: 18)),
             onTap: () {
               // Update the state of the app
               // ...
@@ -32,7 +32,30 @@ class MainDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('Item 2'),
+            title: Text(
+              'Graphs',
+              style: TextStyle(color: Colors.black, fontSize: 18),
+            ),
+            onTap: () {
+              // Update the state of the app
+              // ...
+              // Then close the drawer
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: Text("Personal Data",
+                style: TextStyle(color: Colors.black, fontSize: 18)),
+            onTap: () {
+              // Update the state of the app
+              // ...
+              // Then close the drawer
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: Text("Schedule",
+                style: TextStyle(color: Colors.black, fontSize: 18)),
             onTap: () {
               // Update the state of the app
               // ...

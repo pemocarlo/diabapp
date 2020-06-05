@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:diabapp/widgets/menu.dart';
 
 class Meal extends StatefulWidget {
   @override
@@ -28,17 +27,14 @@ class _MealState extends State<Meal> {
         leading: Icon(Icons.menu),
         title: Text("Meals"),
       ),
-      body: Stack(children: <Widget>[
-        Center(
-          child: _image == null
-              ? Text(
-                  "empty image",
-                  style: TextStyle(color: Colors.white, fontSize: 12),
-                )
-              : Image.file(_image),
-        ),
-        Menu(),
-      ]),
+      body: Center(
+        child: _image == null
+            ? Text(
+                "empty image",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              )
+            : Image.file(_image),
+      ),
       floatingActionButton: FloatingActionButton(
           onPressed: getImage,
           tooltip: 'Pick Image',
