@@ -50,7 +50,7 @@ class MainDrawer extends StatelessWidget {
             title: Text("Schedule",
                 style: TextStyle(color: Colors.black, fontSize: 18)),
             onTap: () {
-              onTap(Schedule(), context);
+              onTap(Foods(), context);
             },
           ),
         ],

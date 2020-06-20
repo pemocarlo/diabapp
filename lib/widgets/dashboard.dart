@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:diabapp/data/open_food_facts_database.dart';
+import 'package:provider/provider.dart';
+import 'package:moor_db_viewer/moor_db_viewer.dart';
 
 class DashBoard extends StatelessWidget {
   const DashBoard({
@@ -100,7 +103,11 @@ class GridDashboard extends StatelessWidget {
           children: myList.map((data) {
             return GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, "/meal");
+                // Navigator.pushNamed(context, "/meal");
+                final database =
+                    Provider.of<OpenFoodFactsDataBase>(context, listen: false);
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MoorDbViewer(database)));
                 print("hello world");
               },
               child: DashBoardItem(

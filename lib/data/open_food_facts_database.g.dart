@@ -7,9 +7,8 @@ part of 'open_food_facts_database.dart';
 // **************************************************************************
 
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
-class FoodInformation extends DataClass implements Insertable<FoodInformation> {
+class Foodinfo extends DataClass implements Insertable<Foodinfo> {
   final int code;
-  final String title;
   final String productName;
   final String quantity;
   final String brands;
@@ -18,9 +17,8 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
   final double carbohydrates_100g;
   final double sugars_100g;
   final double proteins_100g;
-  FoodInformation(
+  Foodinfo(
       {@required this.code,
-      @required this.title,
       @required this.productName,
       @required this.quantity,
       @required this.brands,
@@ -29,17 +27,14 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
       @required this.carbohydrates_100g,
       @required this.sugars_100g,
       @required this.proteins_100g});
-  factory FoodInformation.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
+  factory Foodinfo.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
     final doubleType = db.typeSystem.forDartType<double>();
-    return FoodInformation(
+    return Foodinfo(
       code: intType.mapFromDatabaseResponse(data['${effectivePrefix}code']),
-      title:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
       productName: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}product_name']),
       quantity: stringType
@@ -63,9 +58,6 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
     final map = <String, Expression>{};
     if (!nullToAbsent || code != null) {
       map['code'] = Variable<int>(code);
-    }
-    if (!nullToAbsent || title != null) {
-      map['title'] = Variable<String>(title);
     }
     if (!nullToAbsent || productName != null) {
       map['product_name'] = Variable<String>(productName);
@@ -94,12 +86,11 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
     return map;
   }
 
-  factory FoodInformation.fromJson(Map<String, dynamic> json,
+  factory Foodinfo.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return FoodInformation(
+    return Foodinfo(
       code: serializer.fromJson<int>(json['code']),
-      title: serializer.fromJson<String>(json['title']),
       productName: serializer.fromJson<String>(json['productName']),
       quantity: serializer.fromJson<String>(json['quantity']),
       brands: serializer.fromJson<String>(json['brands']),
@@ -116,7 +107,6 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'code': serializer.toJson<int>(code),
-      'title': serializer.toJson<String>(title),
       'productName': serializer.toJson<String>(productName),
       'quantity': serializer.toJson<String>(quantity),
       'brands': serializer.toJson<String>(brands),
@@ -128,9 +118,8 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
     };
   }
 
-  FoodInformation copyWith(
+  Foodinfo copyWith(
           {int code,
-          String title,
           String productName,
           String quantity,
           String brands,
@@ -139,9 +128,8 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
           double carbohydrates_100g,
           double sugars_100g,
           double proteins_100g}) =>
-      FoodInformation(
+      Foodinfo(
         code: code ?? this.code,
-        title: title ?? this.title,
         productName: productName ?? this.productName,
         quantity: quantity ?? this.quantity,
         brands: brands ?? this.brands,
@@ -153,9 +141,8 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
       );
   @override
   String toString() {
-    return (StringBuffer('FoodInformation(')
+    return (StringBuffer('Foodinfo(')
           ..write('code: $code, ')
-          ..write('title: $title, ')
           ..write('productName: $productName, ')
           ..write('quantity: $quantity, ')
           ..write('brands: $brands, ')
@@ -172,27 +159,24 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
   int get hashCode => $mrjf($mrjc(
       code.hashCode,
       $mrjc(
-          title.hashCode,
+          productName.hashCode,
           $mrjc(
-              productName.hashCode,
+              quantity.hashCode,
               $mrjc(
-                  quantity.hashCode,
+                  brands.hashCode,
                   $mrjc(
-                      brands.hashCode,
+                      categoriesEn.hashCode,
                       $mrjc(
-                          categoriesEn.hashCode,
+                          energy_100g.hashCode,
                           $mrjc(
-                              energy_100g.hashCode,
-                              $mrjc(
-                                  carbohydrates_100g.hashCode,
-                                  $mrjc(sugars_100g.hashCode,
-                                      proteins_100g.hashCode))))))))));
+                              carbohydrates_100g.hashCode,
+                              $mrjc(sugars_100g.hashCode,
+                                  proteins_100g.hashCode)))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is FoodInformation &&
+      (other is Foodinfo &&
           other.code == this.code &&
-          other.title == this.title &&
           other.productName == this.productName &&
           other.quantity == this.quantity &&
           other.brands == this.brands &&
@@ -203,9 +187,8 @@ class FoodInformation extends DataClass implements Insertable<FoodInformation> {
           other.proteins_100g == this.proteins_100g);
 }
 
-class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
+class FoodinformationCompanion extends UpdateCompanion<Foodinfo> {
   final Value<int> code;
-  final Value<String> title;
   final Value<String> productName;
   final Value<String> quantity;
   final Value<String> brands;
@@ -214,9 +197,8 @@ class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
   final Value<double> carbohydrates_100g;
   final Value<double> sugars_100g;
   final Value<double> proteins_100g;
-  const FoodInformationsCompanion({
+  const FoodinformationCompanion({
     this.code = const Value.absent(),
-    this.title = const Value.absent(),
     this.productName = const Value.absent(),
     this.quantity = const Value.absent(),
     this.brands = const Value.absent(),
@@ -226,9 +208,8 @@ class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
     this.sugars_100g = const Value.absent(),
     this.proteins_100g = const Value.absent(),
   });
-  FoodInformationsCompanion.insert({
+  FoodinformationCompanion.insert({
     this.code = const Value.absent(),
-    @required String title,
     @required String productName,
     @required String quantity,
     @required String brands,
@@ -237,8 +218,7 @@ class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
     @required double carbohydrates_100g,
     @required double sugars_100g,
     @required double proteins_100g,
-  })  : title = Value(title),
-        productName = Value(productName),
+  })  : productName = Value(productName),
         quantity = Value(quantity),
         brands = Value(brands),
         categoriesEn = Value(categoriesEn),
@@ -246,9 +226,8 @@ class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
         carbohydrates_100g = Value(carbohydrates_100g),
         sugars_100g = Value(sugars_100g),
         proteins_100g = Value(proteins_100g);
-  static Insertable<FoodInformation> custom({
+  static Insertable<Foodinfo> custom({
     Expression<int> code,
-    Expression<String> title,
     Expression<String> productName,
     Expression<String> quantity,
     Expression<String> brands,
@@ -260,7 +239,6 @@ class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
   }) {
     return RawValuesInsertable({
       if (code != null) 'code': code,
-      if (title != null) 'title': title,
       if (productName != null) 'product_name': productName,
       if (quantity != null) 'quantity': quantity,
       if (brands != null) 'brands': brands,
@@ -272,9 +250,8 @@ class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
     });
   }
 
-  FoodInformationsCompanion copyWith(
+  FoodinformationCompanion copyWith(
       {Value<int> code,
-      Value<String> title,
       Value<String> productName,
       Value<String> quantity,
       Value<String> brands,
@@ -283,9 +260,8 @@ class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
       Value<double> carbohydrates_100g,
       Value<double> sugars_100g,
       Value<double> proteins_100g}) {
-    return FoodInformationsCompanion(
+    return FoodinformationCompanion(
       code: code ?? this.code,
-      title: title ?? this.title,
       productName: productName ?? this.productName,
       quantity: quantity ?? this.quantity,
       brands: brands ?? this.brands,
@@ -302,9 +278,6 @@ class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
     final map = <String, Expression>{};
     if (code.present) {
       map['code'] = Variable<int>(code.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
     }
     if (productName.present) {
       map['product_name'] = Variable<String>(productName.value);
@@ -334,11 +307,11 @@ class FoodInformationsCompanion extends UpdateCompanion<FoodInformation> {
   }
 }
 
-class $FoodInformationsTable extends FoodInformations
-    with TableInfo<$FoodInformationsTable, FoodInformation> {
+class $FoodinformationTable extends Foodinformation
+    with TableInfo<$FoodinformationTable, Foodinfo> {
   final GeneratedDatabase _db;
   final String _alias;
-  $FoodInformationsTable(this._db, [this._alias]);
+  $FoodinformationTable(this._db, [this._alias]);
   final VerificationMeta _codeMeta = const VerificationMeta('code');
   GeneratedIntColumn _code;
   @override
@@ -349,15 +322,6 @@ class $FoodInformationsTable extends FoodInformations
       $tableName,
       false,
     );
-  }
-
-  final VerificationMeta _titleMeta = const VerificationMeta('title');
-  GeneratedTextColumn _title;
-  @override
-  GeneratedTextColumn get title => _title ??= _constructTitle();
-  GeneratedTextColumn _constructTitle() {
-    return GeneratedTextColumn('title', $tableName, false,
-        minTextLength: 6, maxTextLength: 50);
   }
 
   final VerificationMeta _productNameMeta =
@@ -459,7 +423,6 @@ class $FoodInformationsTable extends FoodInformations
   @override
   List<GeneratedColumn> get $columns => [
         code,
-        title,
         productName,
         quantity,
         brands,
@@ -470,25 +433,19 @@ class $FoodInformationsTable extends FoodInformations
         proteins_100g
       ];
   @override
-  $FoodInformationsTable get asDslTable => this;
+  $FoodinformationTable get asDslTable => this;
   @override
-  String get $tableName => _alias ?? 'food_informations';
+  String get $tableName => _alias ?? 'foodinformation';
   @override
-  final String actualTableName = 'food_informations';
+  final String actualTableName = 'foodinformation';
   @override
-  VerificationContext validateIntegrity(Insertable<FoodInformation> instance,
+  VerificationContext validateIntegrity(Insertable<Foodinfo> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('code')) {
       context.handle(
           _codeMeta, code.isAcceptableOrUnknown(data['code'], _codeMeta));
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title'], _titleMeta));
-    } else if (isInserting) {
-      context.missing(_titleMeta);
     }
     if (data.containsKey('product_name')) {
       context.handle(
@@ -556,25 +513,25 @@ class $FoodInformationsTable extends FoodInformations
   @override
   Set<GeneratedColumn> get $primaryKey => {code};
   @override
-  FoodInformation map(Map<String, dynamic> data, {String tablePrefix}) {
+  Foodinfo map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return FoodInformation.fromData(data, _db, prefix: effectivePrefix);
+    return Foodinfo.fromData(data, _db, prefix: effectivePrefix);
   }
 
   @override
-  $FoodInformationsTable createAlias(String alias) {
-    return $FoodInformationsTable(_db, alias);
+  $FoodinformationTable createAlias(String alias) {
+    return $FoodinformationTable(_db, alias);
   }
 }
 
 abstract class _$OpenFoodFactsDataBase extends GeneratedDatabase {
   _$OpenFoodFactsDataBase(QueryExecutor e)
       : super(SqlTypeSystem.defaultInstance, e);
-  $FoodInformationsTable _foodInformations;
-  $FoodInformationsTable get foodInformations =>
-      _foodInformations ??= $FoodInformationsTable(this);
+  $FoodinformationTable _foodinformation;
+  $FoodinformationTable get foodinformation =>
+      _foodinformation ??= $FoodinformationTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [foodInformations];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [foodinformation];
 }

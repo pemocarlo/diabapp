@@ -7,14 +7,11 @@ import 'package:moor_ffi/moor_ffi.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
-// assuming that your file is called filename.dart. This will give an error at first,
-// but it's needed for moor to know about the generated code
 part 'open_food_facts_database.g.dart';
 
-@DataClassName("FoodInformation")
-class FoodInformations extends Table {
+@DataClassName("Foodinfo")
+class Foodinformation extends Table {
   IntColumn get code => integer()();
-  TextColumn get title => text().withLength(min: 6, max: 50)();
   TextColumn get productName => text().withLength(min: 6, max: 50)();
   TextColumn get quantity => text().withLength(min: 6, max: 50)();
   TextColumn get brands => text().withLength(min: 6, max: 50)();
@@ -30,18 +27,23 @@ class FoodInformations extends Table {
 
 // this annotation tells moor to prepare a database class that uses both of the
 // tables we just defined. We'll see how to use that database class in a moment.
-@UseMoor(tables: [FoodInformations])
+@UseMoor(tables: [Foodinformation])
 class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
   OpenFoodFactsDataBase() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
+
+  Future<List<Foodinfo>> getAllTasks() =>
+      (select(foodinformation)..limit(20)).get();
+  Stream<List<Foodinfo>> watchAllTasks() =>
+      (select(foodinformation)..limit(20)).watch();
 }
 
 LazyDatabase _openConnection() {
   // the LazyDatabase util lets us find the right location for the file async.
   return LazyDatabase(() async {
-    // put the database file, called db.sqlite here, into the documents folder
+    // put the database file into the documents folder
     // for your app.
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'open_food_facts_germany.db'));
@@ -49,6 +51,13 @@ LazyDatabase _openConnection() {
       print("File exists");
     } else {
       print("File doesn't exist");
+      // Make sure the parent directory exists
+      try {
+        await file.parent.create(recursive: true);
+        print("dir created");
+      } catch (_) {
+        print("dir not created");
+      }
       // Copy from asset
       ByteData data = await rootBundle
           .load(p.join("assets/data", "open_food_facts_germany.db"));
@@ -57,6 +66,7 @@ LazyDatabase _openConnection() {
 
       // Write and flush the bytes written
       await file.writeAsBytes(bytes, flush: true);
+      print("File written");
     }
     return VmDatabase(file);
   });
