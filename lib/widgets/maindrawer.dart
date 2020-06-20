@@ -44,8 +44,7 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: Text("Personal Data",
                 style: TextStyle(color: Colors.black, fontSize: 18)),
-            onTap: () {
-            },
+            onTap: () {},
           ),
           ListTile(
             title: Text("Schedule",
