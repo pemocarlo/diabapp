@@ -1,5 +1,8 @@
+import 'package:diabapp/data/open_food_facts_database.dart';
 import 'package:flutter/material.dart';
 import 'package:diabapp/widgets/index.dart';
+import 'package:provider/provider.dart';
+import 'package:moor_db_viewer/moor_db_viewer.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
@@ -50,7 +53,24 @@ class MainDrawer extends StatelessWidget {
             title: Text("Schedule",
                 style: TextStyle(color: Colors.black, fontSize: 18)),
             onTap: () {
+              onTap(Schedule(), context);
+            },
+          ),
+          ListTile(
+            title: Text("Database test",
+                style: TextStyle(color: Colors.black, fontSize: 18)),
+            onTap: () {
               onTap(Foods(), context);
+            },
+          ),
+          ListTile(
+            title: Text("Database viewer",
+                style: TextStyle(color: Colors.black, fontSize: 18)),
+            onTap: () {
+              final database =
+                  Provider.of<OpenFoodFactsDataBase>(context, listen: false);
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => MoorDbViewer(database)));
             },
           ),
         ],
