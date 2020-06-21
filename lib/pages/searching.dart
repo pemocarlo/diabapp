@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:diabapp/data/open_food_facts_database.dart';
+import 'package:provider/provider.dart';
 
 class Searching extends StatelessWidget {
   @override
@@ -89,29 +91,33 @@ class DataSearch extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     // show results based on the selection
     return Center(
-      child: Center(
-        child: Text(query)
-      ),
+      child: Center(child: Text(query)),
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     // show when someone searches
-    final suggestionList = query.isEmpty
-        ? recentCities
-        : cities.where((p) => p.startsWith(query)).toList();
 
-    return ListView.builder(
-      itemBuilder: (context, index) => ListTile(
-        onTap: (){
-          this.query = suggestionList[index];
-          showResults(context);
-        },
-        leading: Icon(Icons.location_city),
-        title: Text(suggestionList[index]),
-      ),
-      itemCount: suggestionList.length,
-    );
+    final database = Provider.of<OpenFoodFactsDataBase>(context);
+    final suggestionList = database.getValue(query);
+
+    return FutureBuilder(
+        future: suggestionList,
+        builder: (context, AsyncSnapshot<List<Foodinfo>> snapshot) {
+          final tasks = snapshot.data ?? List();
+
+          return ListView.builder(
+            itemBuilder: (context, index) => ListTile(
+              onTap: () {
+                this.query = tasks[index].productName;
+                showResults(context);
+              },
+              leading: Icon(Icons.location_city),
+              title: Text(tasks[index].productName),
+            ),
+            itemCount: tasks.length,
+          );
+        });
   }
 }

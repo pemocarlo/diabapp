@@ -36,6 +36,10 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
 
   Future<List<Foodinfo>> getAllTasks() =>
       (select(foodinformation)..limit(20)).get();
+
+  Future<List<Foodinfo>> getValue(String value) =>
+      (select(foodinformation)..where((t) => t.productName.contains(value)))
+          .get();
   Stream<List<Foodinfo>> watchAllTasks() =>
       (select(foodinformation)..limit(20)).watch();
 }
