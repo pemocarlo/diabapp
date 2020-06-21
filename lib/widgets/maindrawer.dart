@@ -73,6 +73,13 @@ class MainDrawer extends StatelessWidget {
                   builder: (context) => MoorDbViewer(database)));
             },
           ),
+          ListTile(
+            title: Text("Search bar",
+                style: TextStyle(color: Colors.black, fontSize: 18)),
+            onTap: () {
+              Navigator.pushNamed(context, "/search");
+            },
+          ),
         ],
       ),
     );
