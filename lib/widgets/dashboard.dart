@@ -101,7 +101,6 @@ class GridDashboard extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 Navigator.pushNamed(context, "/meal");
-                print("hello world");
               },
               child: DashBoardItem(
                 color: color,
