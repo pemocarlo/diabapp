@@ -80,6 +80,13 @@ class MainDrawer extends StatelessWidget {
               Navigator.pushNamed(context, "/search");
             },
           ),
+          ListTile(
+            title: Text("Barcode",
+                style: TextStyle(color: Colors.black, fontSize: 18)),
+            onTap: () {
+              Navigator.pushNamed(context, "/barcode");
+            },
+          ),
         ],
       ),
     );
