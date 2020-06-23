@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:diabapp/widgets/index.dart';
 
-class Meal extends StatefulWidget {
+class MealPage extends StatefulWidget {
   @override
-  _MealState createState() => _MealState();
+  _MealPageState createState() => _MealPageState();
 }
 
-class _MealState extends State<Meal> {
+class _MealPageState extends State<MealPage> {
   File _image;
   final picker = ImagePicker();
 
