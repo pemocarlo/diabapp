@@ -4,10 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:diabapp/main.dart';
 
-class Searching extends StatelessWidget {
+class Searching extends StatefulWidget {
+  @override
+  _SearchingState createState() => _SearchingState();
+}
+
+class _SearchingState extends State<Searching> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +50,6 @@ class FoodList extends StatefulWidget {
 }
 
 class _FoodListState extends State<FoodList> {
-  List<String> foodItems = ["Meat", "Pork", "Chicken"];
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -59,19 +63,23 @@ class _FoodListState extends State<FoodList> {
             onTap: () {},
           )
         ],
-        child: Card(
-          child: ListTile(
-            onTap: () {},
-            leading: Icon(
-              Icons.restaurant,
-              size: 50.0,
+        child: Consumer<AnotherModel>(builder: (context, anotherModel, child) {
+          return Card(
+            child: ListTile(
+              onTap: () {},
+              leading: Icon(
+                Icons.restaurant,
+                size: 50.0,
+              ),
+              title: Text(anotherModel.foodList[index] ?? "undefined"),
+              subtitle:
+                  Text(anotherModel.foodList[index]?? "Unknown brand"),
             ),
-            title: Text(foodItems[index] ?? "undefined"),
-            subtitle: Text(foodItems[index] ?? "Unknown brand"),
-          ),
-        ),
+          );
+        }),
       ),
-      itemCount: foodItems.length,
+      itemCount:
+          Provider.of<AnotherModel>(context, listen: false).foodList.length,
     );
   }
 }
@@ -119,8 +127,9 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     // show results based on the selection
+    var value = Provider.of<AnotherModel>(context, listen: false).foodList[0];
     return Center(
-      child: Center(child: Text(query)),
+      child: Center(child: Text(value)),
     );
   }
 

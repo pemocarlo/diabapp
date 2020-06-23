@@ -14,8 +14,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Provider<OpenFoodFactsDataBase>(
-      create: (context) => OpenFoodFactsDataBase(),
+    return MultiProvider(
+      providers: [
+        Provider<OpenFoodFactsDataBase>(
+            create: (context) => OpenFoodFactsDataBase()),
+        ChangeNotifierProvider<AnotherModel>(
+            create: (context) => AnotherModel()),
+      ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
@@ -31,5 +36,13 @@ class MyApp extends StatelessWidget {
             '/barcode': (BuildContext context) => Barcode(),
           }),
     );
+  }
+}
+
+class AnotherModel with ChangeNotifier {
+  List<String> foodList = ["Pork", "Milk", "Apple", "Pear"];
+  void doSomething(String value) {
+    foodList.add(value);
+    notifyListeners();
   }
 }
