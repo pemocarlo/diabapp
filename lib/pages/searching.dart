@@ -3,6 +3,7 @@ import 'package:diabapp/data/open_food_facts_database.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:barcode_scan/barcode_scan.dart';
 
@@ -24,11 +25,53 @@ class Searching extends StatelessWidget {
           )
         ],
       ),
+      body: FoodList(),
       floatingActionButton: FloatingActionButton(
         onPressed: scan,
         tooltip: 'Pick Image',
         child: Icon(Icons.camera),
       ),
+    );
+  }
+}
+
+class FoodList extends StatefulWidget {
+  const FoodList({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _FoodListState createState() => _FoodListState();
+}
+
+class _FoodListState extends State<FoodList> {
+  List<String> foodItems = ["Meat", "Pork", "Chicken"];
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: (context, index) => Slidable(
+        actionPane: SlidableDrawerActionPane(),
+        secondaryActions: <Widget>[
+          IconSlideAction(
+            caption: 'Delete',
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: () {},
+          )
+        ],
+        child: Card(
+          child: ListTile(
+            onTap: () {},
+            leading: Icon(
+              Icons.restaurant,
+              size: 50.0,
+            ),
+            title: Text(foodItems[index] ?? "undefined"),
+            subtitle: Text(foodItems[index] ?? "Unknown brand"),
+          ),
+        ),
+      ),
+      itemCount: foodItems.length,
     );
   }
 }
