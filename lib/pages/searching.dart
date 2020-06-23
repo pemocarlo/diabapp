@@ -99,8 +99,9 @@ class DataSearch extends SearchDelegate<String> {
                 this.query = tasks[index].productName;
                 showResults(context);
               },
-              leading: Icon(Icons.location_city),
-              title: Text(tasks[index].productName),
+              leading: Icon(Icons.restaurant),
+              title: Text(tasks[index].productName ?? "undefined"),
+              subtitle: Text(tasks[index].brands ?? "Unknown brand"),
             ),
             itemCount: tasks.length,
           );
