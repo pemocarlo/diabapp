@@ -11,7 +11,7 @@ class Searching extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Search App Bar"),
+        title: Text("Search"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -25,35 +25,15 @@ class Searching extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: scan, tooltip: 'Pick Image', child: Icon(Icons.camera)),
+        onPressed: scan,
+        tooltip: 'Pick Image',
+        child: Icon(Icons.camera),
+      ),
     );
   }
 }
 
 class DataSearch extends SearchDelegate<String> {
-  final cities = [
-    "Algiers",
-    "Tirana",
-    "Bogota",
-    "Berlin",
-    "Viena",
-    "Rome",
-    "Madrid",
-    "Paris",
-    "Tokyo",
-    "Sydney",
-    "Beijng",
-    "Auckland",
-    "Baku",
-    "Prague",
-    "Ankara",
-  ];
-
-  final recentCities = [
-    "Madrid",
-    "Paris",
-  ];
-
   @override
   List<Widget> buildActions(BuildContext context) {
     // Actions for appbar
