@@ -14,8 +14,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Provider<OpenFoodFactsDataBase>(
-      create: (context) => OpenFoodFactsDataBase(),
+    return MultiProvider(
+      providers: [
+        Provider<OpenFoodFactsDataBase>(
+            create: (context) => OpenFoodFactsDataBase()),
+        ChangeNotifierProvider<MealItems>(create: (context) => MealItems()),
+      ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
@@ -26,10 +30,23 @@ class MyApp extends StatelessWidget {
           initialRoute: '/home',
           routes: {
             '/home': (BuildContext context) => Home(),
-            '/meal': (BuildContext context) => Meal(),
+            '/meal': (BuildContext context) => MealPage(),
             '/search': (BuildContext context) => Searching(),
             '/barcode': (BuildContext context) => Barcode(),
           }),
     );
+  }
+}
+
+class MealItems with ChangeNotifier {
+  List<Foodinfo> foodList = [];
+  void addFood(Foodinfo value) {
+    foodList.add(value);
+    notifyListeners();
+  }
+
+  void removeFood(int index) {
+    foodList.removeAt(index);
+    notifyListeners();
   }
 }

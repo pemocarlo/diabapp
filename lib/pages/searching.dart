@@ -3,15 +3,21 @@ import 'package:diabapp/data/open_food_facts_database.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
-
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:diabapp/main.dart';
 
-class Searching extends StatelessWidget {
+class Searching extends StatefulWidget {
+  @override
+  _SearchingState createState() => _SearchingState();
+}
+
+class _SearchingState extends State<Searching> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Search App Bar"),
+        title: Text("Search"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -24,36 +30,73 @@ class Searching extends StatelessWidget {
           )
         ],
       ),
+      body: Column(
+        children: <Widget>[
+          Expanded(child: FoodList()),
+          TextAndIconButton(),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
-          onPressed: scan, tooltip: 'Pick Image', child: Icon(Icons.camera)),
+        onPressed: () {
+          var foodItem = scan().then((value) =>
+              Provider.of<OpenFoodFactsDataBase>(context, listen: false)
+                  .getCode(value.rawContent));
+          foodItem.then((value) =>
+              Provider.of<MealItems>(context, listen: false).addFood(value));
+
+          //then((value) => Provider.of<MealItems>(context, listen: false)
+          //.addFood(value));
+        },
+        tooltip: 'Pick Image',
+        child: Icon(Icons.camera),
+      ),
     );
   }
 }
 
+class FoodList extends StatefulWidget {
+  const FoodList({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _FoodListState createState() => _FoodListState();
+}
+
+class _FoodListState extends State<FoodList> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MealItems>(builder: (context, myMeal, child) {
+      return ListView.builder(
+        itemBuilder: (context, index) => Slidable(
+          actionPane: SlidableDrawerActionPane(),
+          secondaryActions: <Widget>[
+            IconSlideAction(
+              caption: 'Delete',
+              color: Colors.red,
+              icon: Icons.delete,
+              onTap: () => myMeal.removeFood(index),
+            )
+          ],
+          child: Card(
+            child: ListTile(
+              onTap: () {},
+              leading: Icon(
+                Icons.restaurant,
+                size: 50.0,
+              ),
+              title: Text(myMeal.foodList[index].productName ?? "undefined"),
+              subtitle: Text(myMeal.foodList[index].brands ?? "Unknown brand"),
+            ),
+          ),
+        ),
+        itemCount: myMeal.foodList.length,
+      );
+    });
+  }
+}
+
 class DataSearch extends SearchDelegate<String> {
-  final cities = [
-    "Algiers",
-    "Tirana",
-    "Bogota",
-    "Berlin",
-    "Viena",
-    "Rome",
-    "Madrid",
-    "Paris",
-    "Tokyo",
-    "Sydney",
-    "Beijng",
-    "Auckland",
-    "Baku",
-    "Prague",
-    "Ankara",
-  ];
-
-  final recentCities = [
-    "Madrid",
-    "Paris",
-  ];
-
   @override
   List<Widget> buildActions(BuildContext context) {
     // Actions for appbar
@@ -97,7 +140,8 @@ class DataSearch extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     // show results based on the selection
     return Center(
-      child: Center(child: Text(query)),
+      child: Center(
+          child: Text(Provider.of<MealItems>(context).foodList[0].productName)),
     );
   }
 
@@ -116,11 +160,14 @@ class DataSearch extends SearchDelegate<String> {
           return ListView.builder(
             itemBuilder: (context, index) => ListTile(
               onTap: () {
-                this.query = tasks[index].productName;
-                showResults(context);
+                Provider.of<MealItems>(context, listen: false)
+                    .addFood(tasks[index]);
+                // showResults(context);
+                this.close(context, null);
               },
-              leading: Icon(Icons.location_city),
-              title: Text(tasks[index].productName),
+              leading: Icon(Icons.restaurant),
+              title: Text(tasks[index].productName ?? "undefined"),
+              subtitle: Text(tasks[index].brands ?? "Unknown brand"),
             ),
             itemCount: tasks.length,
           );
@@ -128,7 +175,7 @@ class DataSearch extends SearchDelegate<String> {
   }
 }
 
-Future scan() async {
+Future<ScanResult> scan() async {
   ScanResult scanResult;
 
   final _flashOnController = TextEditingController(text: "Flash on");
@@ -177,5 +224,20 @@ Future scan() async {
     }
     scanResult = result;
   }
-  print("hello, camera used");
+  print(scanResult.rawContent ?? "");
+  return scanResult;
+}
+
+class TextAndIconButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: FlatButton.icon(
+        color: Colors.grey,
+        icon: Icon(Icons.save),
+        label: Text('Save'),
+        onPressed: () {},
+      ),
+    );
+  }
 }

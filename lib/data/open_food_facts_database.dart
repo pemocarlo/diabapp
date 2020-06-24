@@ -40,6 +40,11 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
   Future<List<Foodinfo>> getValue(String value) =>
       (select(foodinformation)..where((t) => t.productName.contains(value)))
           .get();
+
+  Future<Foodinfo> getCode(String value) =>
+      (select(foodinformation)..where((t) => t.code.equals(int.parse(value))))
+          .getSingle();
+
   Stream<List<Foodinfo>> watchAllTasks() =>
       (select(foodinformation)..limit(20)).watch();
 }
@@ -51,6 +56,7 @@ LazyDatabase _openConnection() {
     // for your app.
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'open_food_facts_germany.db'));
+    await file.delete();
     if (await file.exists()) {
       print("File exists");
     } else {
