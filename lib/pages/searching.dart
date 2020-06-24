@@ -52,35 +52,36 @@ class FoodList extends StatefulWidget {
 class _FoodListState extends State<FoodList> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) => Slidable(
-        actionPane: SlidableDrawerActionPane(),
-        secondaryActions: <Widget>[
-          IconSlideAction(
-            caption: 'Delete',
-            color: Colors.red,
-            icon: Icons.delete,
-            onTap: () {},
-          )
-        ],
-        child: Consumer<AnotherModel>(builder: (context, anotherModel, child) {
-          return Card(
+    return Consumer<MealItems>(builder: (context, anotherModel, child) {
+      return ListView.builder(
+        itemBuilder: (context, index) => Slidable(
+          actionPane: SlidableDrawerActionPane(),
+          secondaryActions: <Widget>[
+            IconSlideAction(
+              caption: 'Delete',
+              color: Colors.red,
+              icon: Icons.delete,
+              onTap: () {},
+            )
+          ],
+          child: Card(
             child: ListTile(
               onTap: () {},
               leading: Icon(
                 Icons.restaurant,
                 size: 50.0,
               ),
-              title: Text(anotherModel.foodList[index] ?? "undefined"),
+              title:
+                  Text(anotherModel.foodList[index].productName ?? "undefined"),
               subtitle:
-                  Text(anotherModel.foodList[index]?? "Unknown brand"),
+                  Text(anotherModel.foodList[index].brands ?? "Unknown brand"),
             ),
-          );
-        }),
-      ),
-      itemCount:
-          Provider.of<AnotherModel>(context, listen: false).foodList.length,
-    );
+          ),
+        ),
+        itemCount:
+            Provider.of<MealItems>(context, listen: false).foodList.length,
+      );
+    });
   }
 }
 
@@ -127,9 +128,9 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     // show results based on the selection
-    var value = Provider.of<AnotherModel>(context, listen: false).foodList[0];
     return Center(
-      child: Center(child: Text(value)),
+      child: Center(
+          child: Text(Provider.of<MealItems>(context).foodList[0].productName)),
     );
   }
 
@@ -148,8 +149,10 @@ class DataSearch extends SearchDelegate<String> {
           return ListView.builder(
             itemBuilder: (context, index) => ListTile(
               onTap: () {
-                this.query = tasks[index].productName;
-                showResults(context);
+                Provider.of<MealItems>(context, listen: false)
+                    .addFood(tasks[index]);
+                // showResults(context);
+                this.close(context, null);
               },
               leading: Icon(Icons.restaurant),
               title: Text(tasks[index].productName ?? "undefined"),

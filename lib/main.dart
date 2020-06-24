@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<OpenFoodFactsDataBase>(
             create: (context) => OpenFoodFactsDataBase()),
-        ChangeNotifierProvider<AnotherModel>(
-            create: (context) => AnotherModel()),
+        ChangeNotifierProvider<MealItems>(
+            create: (context) => MealItems()),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -39,9 +39,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AnotherModel with ChangeNotifier {
-  List<String> foodList = ["Pork", "Milk", "Apple", "Pear"];
-  void doSomething(String value) {
+class MealItems with ChangeNotifier {
+  List<Foodinfo> foodList = [];
+  void addFood(Foodinfo value) {
     foodList.add(value);
     notifyListeners();
   }
