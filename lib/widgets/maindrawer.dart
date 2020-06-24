@@ -45,46 +45,27 @@ class MainDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text("Personal Data",
-                style: TextStyle(color: Colors.black, fontSize: 18)),
-            onTap: () {},
-          ),
-          ListTile(
             title: Text("Schedule",
                 style: TextStyle(color: Colors.black, fontSize: 18)),
             onTap: () {
               onTap(Schedule(), context);
             },
           ),
+          // ListTile(
+          //   title: Text("Database viewer",
+          //       style: TextStyle(color: Colors.black, fontSize: 18)),
+          //   onTap: () {
+          //     final database =
+          //         Provider.of<OpenFoodFactsDataBase>(context, listen: false);
+          //     Navigator.of(context).push(MaterialPageRoute(
+          //         builder: (context) => MoorDbViewer(database)));
+          //   },
+          // ),
           ListTile(
-            title: Text("Database test",
-                style: TextStyle(color: Colors.black, fontSize: 18)),
-            onTap: () {
-              onTap(Foods(), context);
-            },
-          ),
-          ListTile(
-            title: Text("Database viewer",
-                style: TextStyle(color: Colors.black, fontSize: 18)),
-            onTap: () {
-              final database =
-                  Provider.of<OpenFoodFactsDataBase>(context, listen: false);
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => MoorDbViewer(database)));
-            },
-          ),
-          ListTile(
-            title: Text("Search bar",
+            title: Text("New meal",
                 style: TextStyle(color: Colors.black, fontSize: 18)),
             onTap: () {
               Navigator.pushNamed(context, "/search");
-            },
-          ),
-          ListTile(
-            title: Text("Barcode",
-                style: TextStyle(color: Colors.black, fontSize: 18)),
-            onTap: () {
-              Navigator.pushNamed(context, "/barcode");
             },
           ),
         ],
