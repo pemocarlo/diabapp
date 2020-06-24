@@ -56,6 +56,7 @@ LazyDatabase _openConnection() {
     // for your app.
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'open_food_facts_germany.db'));
+    await file.delete();
     if (await file.exists()) {
       print("File exists");
     } else {
