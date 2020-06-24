@@ -57,7 +57,7 @@ class FoodList extends StatefulWidget {
 class _FoodListState extends State<FoodList> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<MealItems>(builder: (context, anotherModel, child) {
+    return Consumer<MealItems>(builder: (context, myMeal, child) {
       return ListView.builder(
         itemBuilder: (context, index) => Slidable(
           actionPane: SlidableDrawerActionPane(),
@@ -66,7 +66,7 @@ class _FoodListState extends State<FoodList> {
               caption: 'Delete',
               color: Colors.red,
               icon: Icons.delete,
-              onTap: () {},
+              onTap: () => myMeal.removeFood(index),
             )
           ],
           child: Card(
@@ -76,15 +76,12 @@ class _FoodListState extends State<FoodList> {
                 Icons.restaurant,
                 size: 50.0,
               ),
-              title:
-                  Text(anotherModel.foodList[index].productName ?? "undefined"),
-              subtitle:
-                  Text(anotherModel.foodList[index].brands ?? "Unknown brand"),
+              title: Text(myMeal.foodList[index].productName ?? "undefined"),
+              subtitle: Text(myMeal.foodList[index].brands ?? "Unknown brand"),
             ),
           ),
         ),
-        itemCount:
-            Provider.of<MealItems>(context, listen: false).foodList.length,
+        itemCount: myMeal.foodList.length,
       );
     });
   }

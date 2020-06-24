@@ -18,8 +18,7 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<OpenFoodFactsDataBase>(
             create: (context) => OpenFoodFactsDataBase()),
-        ChangeNotifierProvider<MealItems>(
-            create: (context) => MealItems()),
+        ChangeNotifierProvider<MealItems>(create: (context) => MealItems()),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -43,6 +42,11 @@ class MealItems with ChangeNotifier {
   List<Foodinfo> foodList = [];
   void addFood(Foodinfo value) {
     foodList.add(value);
+    notifyListeners();
+  }
+
+  void removeFood(int index) {
+    foodList.removeAt(index);
     notifyListeners();
   }
 }
