@@ -30,7 +30,12 @@ class _SearchingState extends State<Searching> {
           )
         ],
       ),
-      body: FoodList(),
+      body: Column(
+        children: <Widget>[
+          Expanded(child: FoodList()),
+          TextAndIconButton(),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: scan,
         tooltip: 'Pick Image',
@@ -214,4 +219,18 @@ Future scan() async {
     scanResult = result;
   }
   print("hello, camera used");
+}
+
+class TextAndIconButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: FlatButton.icon(
+        color: Colors.grey,
+        icon: Icon(Icons.save),
+        label: Text('Save'),
+        onPressed: () {},
+      ),
+    );
+  }
 }
