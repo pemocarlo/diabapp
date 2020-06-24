@@ -37,7 +37,16 @@ class _SearchingState extends State<Searching> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: scan,
+        onPressed: () {
+          var foodItem = scan().then((value) =>
+              Provider.of<OpenFoodFactsDataBase>(context, listen: false)
+                  .getCode(value.rawContent));
+          foodItem.then((value) =>
+              Provider.of<MealItems>(context, listen: false).addFood(value));
+
+          //then((value) => Provider.of<MealItems>(context, listen: false)
+          //.addFood(value));
+        },
         tooltip: 'Pick Image',
         child: Icon(Icons.camera),
       ),
@@ -166,7 +175,7 @@ class DataSearch extends SearchDelegate<String> {
   }
 }
 
-Future scan() async {
+Future<ScanResult> scan() async {
   ScanResult scanResult;
 
   final _flashOnController = TextEditingController(text: "Flash on");
@@ -215,7 +224,8 @@ Future scan() async {
     }
     scanResult = result;
   }
-  print("hello, camera used");
+  print(scanResult.rawContent ?? "");
+  return scanResult;
 }
 
 class TextAndIconButton extends StatelessWidget {
