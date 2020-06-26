@@ -41,8 +41,9 @@ class _SearchingState extends State<Searching> {
           var foodItem = scan().then((value) =>
               Provider.of<OpenFoodFactsDataBase>(context, listen: false)
                   .getCode(value.rawContent));
-          foodItem.then((value) =>
-              Provider.of<MealItems>(context, listen: false).addFood(value));
+          foodItem.then((value) => value != null
+              ? Provider.of<MealItems>(context, listen: false).addFood(value)
+              : print("Not found"));
 
           //then((value) => Provider.of<MealItems>(context, listen: false)
           //.addFood(value));
@@ -229,14 +230,43 @@ Future<ScanResult> scan() async {
 }
 
 class TextAndIconButton extends StatelessWidget {
+  final TextEditingController _textFieldController = TextEditingController();
+
+  _displayDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Name of your meal'),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: "Meal"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('SAVE'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: FlatButton.icon(
-        color: Colors.grey,
+      child: RaisedButton.icon(
         icon: Icon(Icons.save),
         label: Text('Save'),
-        onPressed: () {},
+        onPressed: () => _displayDialog(context),
       ),
     );
   }
