@@ -41,8 +41,9 @@ class _SearchingState extends State<Searching> {
           var foodItem = scan().then((value) =>
               Provider.of<OpenFoodFactsDataBase>(context, listen: false)
                   .getCode(value.rawContent));
-          foodItem.then((value) =>
-              Provider.of<MealItems>(context, listen: false).addFood(value));
+          foodItem.then((value) => value != null
+              ? Provider.of<MealItems>(context, listen: false).addFood(value)
+              : print("Not found"));
 
           //then((value) => Provider.of<MealItems>(context, listen: false)
           //.addFood(value));
