@@ -233,19 +233,30 @@ class TextAndIconButton extends StatelessWidget {
   final TextEditingController _textFieldController = TextEditingController();
 
   _displayDialog(BuildContext context) async {
+    var foodDb = Provider.of<OpenFoodFactsDataBase>(context, listen: false);
+    var fooditems = Provider.of<MealItems>(context, listen: false).foodList;
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Name of your meal'),
+            title: Text("Enter name for your meal"),
             content: TextField(
               controller: _textFieldController,
-              decoration: InputDecoration(hintText: "Meal"),
+              decoration: InputDecoration(hintText: "My meal"),
             ),
             actions: <Widget>[
               FlatButton(
                 child: Text('SAVE'),
                 onPressed: () {
+                  Provider.of<MealItems>(context, listen: false).mealName =
+                      _textFieldController.text;
+                  foodDb.createEmptyMeal().then((value) {
+                    value.foodItems = fooditems;
+                    foodDb.writeMeal(value);
+                  });
+                  // var item = foodDb.watchAllMeals().last;
+                  // item.then((value) => print(value[0].foodItems[0].productName??"notfound"));
+                  print("done");
                   Navigator.of(context).pop();
                 },
               ),

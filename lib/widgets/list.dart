@@ -22,13 +22,12 @@ class _FoodsState extends State<Foods> {
     return _buildFoodList(context);
   }
 
-  StreamBuilder<List<Foodinfo>> _buildFoodList(BuildContext context) {
+  StreamBuilder<List<MealWithFoodItems>> _buildFoodList(BuildContext context) {
     final database = Provider.of<OpenFoodFactsDataBase>(context);
 
-
     return StreamBuilder(
-      stream: database.watchAllTasks(),
-      builder: (context, AsyncSnapshot<List<Foodinfo>> snapshot) {
+      stream: database.watchAllMeals(),
+      builder: (context, AsyncSnapshot<List<MealWithFoodItems>> snapshot) {
         final tasks = snapshot.data ?? List();
 
         return ListView.builder(
@@ -42,10 +41,11 @@ class _FoodsState extends State<Foods> {
     );
   }
 
-  Widget _buildListItem(Foodinfo itemTask, OpenFoodFactsDataBase database) {
+  Widget _buildListItem(
+      MealWithFoodItems itemTask, OpenFoodFactsDataBase database) {
     return ListTile(
       title: Text(
-        itemTask.productName,
+        itemTask.foodItems[0].productName ?? "Nothing",
         style: _biggerFont,
       ),
     );

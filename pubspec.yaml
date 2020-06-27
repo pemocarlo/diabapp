@@ -30,6 +30,7 @@ dependencies:
   provider: ^4.1.3
   barcode_scan: any
   flutter_slidable: ^0.5.4
+  rxdart: ^0.24.1
   path_provider:
   path:
   flutter:
