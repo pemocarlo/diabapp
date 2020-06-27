@@ -47,8 +47,18 @@ class MealItems with ChangeNotifier {
     notifyListeners();
   }
 
+  void replaceFoodList(List<Foodinfo> value) {
+    foodList = value;
+    notifyListeners();
+  }
+
   void removeFood(int index) {
     foodList.removeAt(index);
     notifyListeners();
   }
+}
+
+class DisplayData with ChangeNotifier {
+  String mealName = "";
+  String searchType = "Food";
 }

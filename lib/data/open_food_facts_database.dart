@@ -41,7 +41,7 @@ class MealEntries extends Table {
 }
 
 class MealWithFoodItems {
-  final Meal meal;
+  Meal meal;
   List<Foodinfo> foodItems;
   MealWithFoodItems(this.meal, this.foodItems);
 }
@@ -90,9 +90,9 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
     });
   }
 
-  Future<MealWithFoodItems> createEmptyMeal() async {
+  Future<MealWithFoodItems> createEmptyMeal(String name) async {
     final id = await into(meals).insert(const MealsCompanion());
-    final cart = Meal(id: id, name: "test");
+    Meal cart = Meal(id: id, name: name);
     // we set the items property to [] because we've just created the Meal - it will be empty
     print("empty meal created");
     return MealWithFoodItems(cart, []);
@@ -119,6 +119,52 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
     return CombineLatestStream.combine2(cartStream, contentStream,
         (Meal meal, List<Foodinfo> items) {
       return MealWithFoodItems(meal, items);
+    });
+  }
+
+  Stream<List<MealWithFoodItems>> watchMealContains(String value) {
+    // start by watching all carts
+    final cartStream =
+        (select(meals)..where((meal) => meal.name.contains(value))).watch();
+
+    return cartStream.switchMap((carts) {
+      // this method is called whenever the list of carts changes. For each
+      // cart, now we want to load all the items in it.
+      // (we create a map from id to cart here just for performance reasons)
+      final idToCart = {for (var cart in carts) cart.id: cart};
+      final ids = idToCart.keys;
+
+      // select all entries that are included in any cart that we found
+      final entryQuery = select(mealEntries).join(
+        [
+          innerJoin(
+            foodinformation,
+            foodinformation.code.equalsExp(mealEntries.foodItem),
+          )
+        ],
+      )..where(mealEntries.meal.isIn(ids));
+
+      return entryQuery.watch().map((rows) {
+        // Store the list of entries for each cart, again using maps for faster
+        // lookups.
+        final idToItems = <int, List<Foodinfo>>{};
+
+        // for each entry (row) that is included in a cart, put it in the map
+        // of items.
+        for (var row in rows) {
+          final item = row.readTable(foodinformation);
+          final id = row.readTable(mealEntries).meal;
+
+          idToItems.putIfAbsent(id, () => []).add(item);
+        }
+        print("watch all meals");
+        // finally, all that's left is to merge the map of carts with the map of
+        // entries
+        return [
+          for (var id in ids)
+            MealWithFoodItems(idToCart[id], idToItems[id] ?? []),
+        ];
+      });
     });
   }
 

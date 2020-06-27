@@ -25,20 +25,41 @@ class _FoodSearchState extends State<FoodSearch> {
               final database =
                   Provider.of<OpenFoodFactsDataBase>(context, listen: false);
               var queryDB;
+              Function title;
+              Function subtitle;
+              SearchDelegate<dynamic> delegate;
+              var onTap;
               switch (
                   Provider.of<MealItems>(context, listen: false).searchType) {
                 case "Food":
                   queryDB = database.containsValue;
+                  title =
+                      (List<Foodinfo> list, index) => list[index].productName;
+                  subtitle = (List<Foodinfo> list, index) => list[index].brands;
+                  onTap = (List<Foodinfo> myList, index) =>
+                      Provider.of<MealItems>(context, listen: false)
+                          .addFood(myList[index]);
+                  delegate = DataSearch<Foodinfo>(
+                      queryDB, title, subtitle, onTap,
+                      initialSuggestions: database.watchAllTasks);
                   break;
                 case "Meal":
-                  queryDB = database.equalsValue;
+                  queryDB = database.watchMealContains;
+                  title = (List<MealWithFoodItems> list, index) =>
+                      list[index].meal.name;
+                  subtitle = (List<MealWithFoodItems> list, index) =>
+                      list[index].meal.name;
+                  onTap = (List<MealWithFoodItems> list, index) {
+                    Provider.of<MealItems>(context, listen: false)
+                        .replaceFoodList(list[index].foodItems);
+                  };
+                  delegate = DataSearch<MealWithFoodItems>(
+                      queryDB, title, subtitle, onTap,
+                      initialSuggestions: database.watchAllMeals);
                   break;
                 default:
               }
-              showSearch(
-                  context: context,
-                  delegate: DataSearch(queryDB,
-                      initialSuggestions: database.watchAllTasks));
+              showSearch(context: context, delegate: delegate);
             },
           ),
           MyDropdownFilled(dropDownValues: ["Food", "Meal", "Custom"]),
@@ -134,7 +155,9 @@ class TextAndIconButton extends StatelessWidget {
                 onPressed: () {
                   Provider.of<MealItems>(context, listen: false).mealName =
                       _textFieldController.text;
-                  foodDb.createEmptyMeal().then((value) {
+                  foodDb
+                      .createEmptyMeal(_textFieldController.text)
+                      .then((value) {
                     value.foodItems = fooditems;
                     foodDb.writeMeal(value);
                   });

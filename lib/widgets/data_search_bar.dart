@@ -1,12 +1,18 @@
 import 'package:diabapp/data/open_food_facts_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:diabapp/main.dart';
 
-class DataSearch extends SearchDelegate<String> {
+class DataSearch<T> extends SearchDelegate {
   final Function queryDB;
   final Function initialSuggestions;
-  DataSearch(this.queryDB, {this.initialSuggestions});
+  final Function title;
+  final Function subtitle;
+  final Function onTap;
+
+  DataSearch(this.queryDB, this.title, this.subtitle, this.onTap,
+      {@required this.initialSuggestions});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -61,20 +67,29 @@ class DataSearch extends SearchDelegate<String> {
 
     return StreamBuilder(
         stream: suggestionList,
-        builder: (context, AsyncSnapshot<List<Foodinfo>> snapshot) {
+        builder: (context, AsyncSnapshot<List<T>> snapshot) {
           final tasks = snapshot.data ?? List();
 
           return ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-              onTap: () {
-                Provider.of<MealItems>(context, listen: false)
-                    .addFood(tasks[index]);
-                // showResults(context);
-                this.close(context, null);
-              },
-              leading: Icon(Icons.restaurant),
-              title: Text(tasks[index].productName ?? "undefined"),
-              subtitle: Text(tasks[index].brands ?? "Unknown brand"),
+            itemBuilder: (context, index) => Slidable(
+              actionPane: SlidableDrawerActionPane(),
+              secondaryActions: <Widget>[
+                IconSlideAction(
+                  caption: 'Delete',
+                  color: Colors.red,
+                  icon: Icons.delete,
+                  onTap: () {},
+                )
+              ],
+              child: ListTile(
+                onTap: () {
+                  onTap(tasks, index);
+                  this.close(context, null);
+                },
+                leading: Icon(Icons.restaurant),
+                title: Text(title(tasks, index) ?? "undefined"),
+                subtitle: Text(subtitle(tasks, index) ?? "Unknown brand"),
+              ),
             ),
             itemCount: tasks.length,
           );
