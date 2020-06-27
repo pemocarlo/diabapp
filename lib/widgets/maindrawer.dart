@@ -1,5 +1,8 @@
+import 'package:diabapp/data/open_food_facts_database.dart';
 import 'package:flutter/material.dart';
 import 'package:diabapp/widgets/index.dart';
+import 'package:moor_db_viewer/moor_db_viewer.dart';
+import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
@@ -54,22 +57,32 @@ class MainDrawer extends StatelessWidget {
                     onTap(Schedule(), context);
                   },
                 ),
-                // ListTile(
-                //   title: Text("Database viewer",
-                //       style: TextStyle(color: Colors.black, fontSize: 18)),
-                //   onTap: () {
-                //     final database =
-                //         Provider.of<OpenFoodFactsDataBase>(context, listen: false);
-                //     Navigator.of(context).push(MaterialPageRoute(
-                //         builder: (context) => MoorDbViewer(database)));
-                //   },
-                // ),
+                ListTile(
+                  title: Text("Database viewer",
+                      style: TextStyle(color: Colors.black, fontSize: 18)),
+                  onTap: () {
+                    final database =
+                        Provider.of<OpenFoodFactsDataBase>(context, listen: false);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MoorDbViewer(database)));
+                  },
+                ),
                 ListTile(
                   leading: Icon(Icons.fastfood),
                   title: Text("New meal",
                       style: TextStyle(color: Colors.black, fontSize: 18)),
                   onTap: () {
                     Navigator.pushNamed(context, "/search");
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.data_usage),
+                  title: Text(
+                    'DB test',
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                  ),
+                  onTap: () {
+                    onTap(Foods(), context);
                   },
                 ),
               ],
