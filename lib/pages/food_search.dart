@@ -1,5 +1,6 @@
 import 'package:diabapp/services/barcode_scan.dart';
 import 'package:diabapp/widgets/data_search_bar.dart';
+import 'package:diabapp/widgets/newDropDown.dart';
 import 'package:flutter/material.dart';
 import 'package:diabapp/data/open_food_facts_database.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +30,20 @@ class _FoodSearchState extends State<FoodSearch> {
                 delegate: DataSearch(queryDB),
               );
             },
-          )
+          ),
+          MyDropdownFilled(dropDownValues: ["Food", "Meal", "Custom"]),
+          IconButton(
+            icon: Icon(Icons.camera),
+            onPressed: () {
+              var foodItem = scan().then((value) =>
+                  Provider.of<OpenFoodFactsDataBase>(context, listen: false)
+                      .getCode(value.rawContent));
+              foodItem.then((value) => value != null
+                  ? Provider.of<MealItems>(context, listen: false)
+                      .addFood(value)
+                  : print("Not found"));
+            },
+          ),
         ],
       ),
       body: Column(
@@ -39,16 +53,9 @@ class _FoodSearchState extends State<FoodSearch> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          var foodItem = scan().then((value) =>
-              Provider.of<OpenFoodFactsDataBase>(context, listen: false)
-                  .getCode(value.rawContent));
-          foodItem.then((value) => value != null
-              ? Provider.of<MealItems>(context, listen: false).addFood(value)
-              : print("Not found"));
-        },
+        onPressed: () {},
         tooltip: 'Pick Image',
-        child: Icon(Icons.camera),
+        child: Icon(Icons.add),
       ),
     );
   }
