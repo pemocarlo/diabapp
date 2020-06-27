@@ -5,9 +5,8 @@ import 'package:diabapp/main.dart';
 
 class DataSearch extends SearchDelegate<String> {
   final Function queryDB;
-  DataSearch(
-    this.queryDB,
-  );
+  final Function initialSuggestions;
+  DataSearch(this.queryDB, {this.initialSuggestions});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -57,7 +56,8 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     // show when someone searches
-    final suggestionList = queryDB(query);
+    final suggestionList =
+        query.isEmpty ? initialSuggestions() : queryDB(query);
 
     return StreamBuilder(
         stream: suggestionList,

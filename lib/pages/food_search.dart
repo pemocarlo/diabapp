@@ -24,11 +24,21 @@ class _FoodSearchState extends State<FoodSearch> {
             onPressed: () {
               final database =
                   Provider.of<OpenFoodFactsDataBase>(context, listen: false);
-              final queryDB = database.getValue;
+              var queryDB;
+              switch (
+                  Provider.of<MealItems>(context, listen: false).searchType) {
+                case "Food":
+                  queryDB = database.containsValue;
+                  break;
+                case "Meal":
+                  queryDB = database.equalsValue;
+                  break;
+                default:
+              }
               showSearch(
-                context: context,
-                delegate: DataSearch(queryDB),
-              );
+                  context: context,
+                  delegate: DataSearch(queryDB,
+                      initialSuggestions: database.watchAllTasks));
             },
           ),
           MyDropdownFilled(dropDownValues: ["Food", "Meal", "Custom"]),

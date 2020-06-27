@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
 class MealItems with ChangeNotifier {
   List<Foodinfo> foodList = [];
   String mealName = "";
-  String searchType = "food";
+  String searchType = "Food";
   void addFood(Foodinfo value) {
     foodList.add(value);
     notifyListeners();
