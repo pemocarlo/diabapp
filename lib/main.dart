@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:diabapp/pages/home.dart';
 import 'package:diabapp/pages/meal.dart';
-import 'package:diabapp/pages/searching.dart';
+import 'package:diabapp/pages/food_search.dart';
 import 'package:diabapp/pages/barcode.dart';
 import 'package:provider/provider.dart';
 import 'data/open_food_facts_database.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           routes: {
             '/home': (BuildContext context) => Home(),
             '/meal': (BuildContext context) => MealPage(),
-            '/search': (BuildContext context) => Searching(),
+            '/search': (BuildContext context) => FoodSearch(),
             '/barcode': (BuildContext context) => Barcode(),
           }),
     );
