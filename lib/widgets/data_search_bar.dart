@@ -1,8 +1,5 @@
-import 'package:diabapp/data/open_food_facts_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:provider/provider.dart';
-import 'package:diabapp/main.dart';
 
 class DataSearch<T> extends SearchDelegate {
   final Function queryDB;

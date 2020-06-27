@@ -38,7 +38,7 @@ class _FoodSearchState extends State<FoodSearch> {
                   subtitle = (List<Foodinfo> list, index) => list[index].brands;
                   onTap = (List<Foodinfo> myList, index) =>
                       Provider.of<MealItems>(context, listen: false)
-                          .addFood(myList[index]);
+                          .addFoodItem(myList[index]);
                   delegate = DataSearch<Foodinfo>(
                       queryDB, title, subtitle, onTap,
                       initialSuggestions: database.watchAllTasks);
@@ -50,8 +50,8 @@ class _FoodSearchState extends State<FoodSearch> {
                   subtitle = (List<MealWithFoodItems> list, index) =>
                       list[index].meal.name;
                   onTap = (List<MealWithFoodItems> list, index) {
-                    Provider.of<MealItems>(context, listen: false)
-                        .replaceFoodList(list[index].foodItems);
+                    // Provider.of<MealItems>(context, listen: false)
+                    //     .replaceFoodList(list[index].foodItems);
                   };
                   delegate = DataSearch<MealWithFoodItems>(
                       queryDB, title, subtitle, onTap,
@@ -71,7 +71,7 @@ class _FoodSearchState extends State<FoodSearch> {
                       .getCode(value.rawContent));
               foodItem.then((value) => value != null
                   ? Provider.of<MealItems>(context, listen: false)
-                      .addFood(value)
+                      .addFoodItem(value)
                   : print("Not found"));
             },
           ),
@@ -117,18 +117,42 @@ class _FoodListState extends State<FoodList> {
             )
           ],
           child: Card(
-            child: ListTile(
-              onTap: () {},
-              leading: Icon(
-                Icons.restaurant,
-                size: 50.0,
-              ),
-              title: Text(myMeal.foodList[index].productName ?? "undefined"),
-              subtitle: Text(myMeal.foodList[index].brands ?? "Unknown brand"),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: ListTile(
+                    onTap: () {},
+                    leading: Icon(
+                      Icons.restaurant,
+                      size: 50.0,
+                    ),
+                    title: Text(myMeal.foodItems[index].item.productName ??
+                        "undefined"),
+                    subtitle: Text(
+                        myMeal.foodItems[index].item.brands ?? "Unknown brand"),
+                  ),
+                ),
+                myMeal.foodItems[index].portions != 0
+                    ? IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: () =>
+                            myMeal.changePortion(index, "decrement"),
+                      )
+                    : Container(),
+                Consumer<MealItems>(
+                  builder: (context, myMeal, child) {
+                    return Text(myMeal.foodItems[index].portions.toString());
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () => myMeal.changePortion(index, "increment"),
+                ),
+              ],
             ),
           ),
         ),
-        itemCount: myMeal.foodList.length,
+        itemCount: myMeal.foodItems.length,
       );
     });
   }
@@ -139,7 +163,7 @@ class TextAndIconButton extends StatelessWidget {
 
   _displayDialog(BuildContext context) async {
     var foodDb = Provider.of<OpenFoodFactsDataBase>(context, listen: false);
-    var fooditems = Provider.of<MealItems>(context, listen: false).foodList;
+    var fooditems = Provider.of<MealItems>(context, listen: false).foodItems;
     return showDialog(
         context: context,
         builder: (context) {
@@ -158,7 +182,7 @@ class TextAndIconButton extends StatelessWidget {
                   foodDb
                       .createEmptyMeal(_textFieldController.text)
                       .then((value) {
-                    value.foodItems = fooditems;
+                    value.foodItems = fooditems.map((e) => e.item).toList();
                     foodDb.writeMeal(value);
                   });
                   Navigator.of(context).pop();
