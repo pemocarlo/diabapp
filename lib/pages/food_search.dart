@@ -124,7 +124,7 @@ class _FoodListState extends State<FoodList> {
                     onTap: () {},
                     leading: Icon(
                       Icons.restaurant,
-                      size: 50.0,
+                      // size: 50.0,
                     ),
                     title: Text(myMeal.foodItems[index].myItem.productName ??
                         "undefined"),
@@ -132,7 +132,7 @@ class _FoodListState extends State<FoodList> {
                         "Unknown brand"),
                   ),
                 ),
-                myMeal.foodItems[index].portions != 0
+                myMeal.foodItems[index].portions != 0.5
                     ? IconButton(
                         icon: Icon(Icons.remove),
                         onPressed: () =>
@@ -141,7 +141,13 @@ class _FoodListState extends State<FoodList> {
                     : Container(),
                 Consumer<MealItems>(
                   builder: (context, myMeal, child) {
-                    return Text(myMeal.foodItems[index].portions.toString());
+                    return Column(
+                      children: <Widget>[
+                        Text(myMeal.foodItems[index].portions.toString()),
+                        Text(
+                            myMeal.foodItems[index].quantity.toString() + " g"),
+                      ],
+                    );
                   },
                 ),
                 IconButton(

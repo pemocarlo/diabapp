@@ -68,9 +68,13 @@ class MealItems with ChangeNotifier {
     switch (mode) {
       case "increment":
         foodItems[index].portions += 0.5;
+        foodItems[index].quantity =
+            foodItems[index].baseQuantity * foodItems[index].portions;
         break;
       case "decrement":
         foodItems[index].portions -= 0.5;
+        foodItems[index].quantity =
+            foodItems[index].baseQuantity * foodItems[index].portions;
         break;
       default:
     }
@@ -102,6 +106,12 @@ class MealItems with ChangeNotifier {
 class MyFoodItem {
   Foodinfo myItem;
   double portions;
+  final double baseQuantity = 100;
+  double quantity;
 
-  MyFoodItem(this.myItem, [this.portions = 1]);
+  MyFoodItem(
+    this.myItem, [
+    this.portions = 1,
+    this.quantity = 100,
+  ]);
 }

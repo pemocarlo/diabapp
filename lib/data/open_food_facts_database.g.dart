@@ -758,7 +758,7 @@ class $MealsTable extends Meals with TableInfo<$MealsTable, Meal> {
 class MealEntry extends DataClass implements Insertable<MealEntry> {
   final int meal;
   final int foodItem;
-  final int quantity;
+  final double quantity;
   final double portions;
   MealEntry(
       {@required this.meal,
@@ -774,8 +774,8 @@ class MealEntry extends DataClass implements Insertable<MealEntry> {
       meal: intType.mapFromDatabaseResponse(data['${effectivePrefix}meal']),
       foodItem:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}food_item']),
-      quantity:
-          intType.mapFromDatabaseResponse(data['${effectivePrefix}quantity']),
+      quantity: doubleType
+          .mapFromDatabaseResponse(data['${effectivePrefix}quantity']),
       portions: doubleType
           .mapFromDatabaseResponse(data['${effectivePrefix}portions']),
     );
@@ -790,7 +790,7 @@ class MealEntry extends DataClass implements Insertable<MealEntry> {
       map['food_item'] = Variable<int>(foodItem);
     }
     if (!nullToAbsent || quantity != null) {
-      map['quantity'] = Variable<int>(quantity);
+      map['quantity'] = Variable<double>(quantity);
     }
     if (!nullToAbsent || portions != null) {
       map['portions'] = Variable<double>(portions);
@@ -804,7 +804,7 @@ class MealEntry extends DataClass implements Insertable<MealEntry> {
     return MealEntry(
       meal: serializer.fromJson<int>(json['meal']),
       foodItem: serializer.fromJson<int>(json['foodItem']),
-      quantity: serializer.fromJson<int>(json['quantity']),
+      quantity: serializer.fromJson<double>(json['quantity']),
       portions: serializer.fromJson<double>(json['portions']),
     );
   }
@@ -814,12 +814,13 @@ class MealEntry extends DataClass implements Insertable<MealEntry> {
     return <String, dynamic>{
       'meal': serializer.toJson<int>(meal),
       'foodItem': serializer.toJson<int>(foodItem),
-      'quantity': serializer.toJson<int>(quantity),
+      'quantity': serializer.toJson<double>(quantity),
       'portions': serializer.toJson<double>(portions),
     };
   }
 
-  MealEntry copyWith({int meal, int foodItem, int quantity, double portions}) =>
+  MealEntry copyWith(
+          {int meal, int foodItem, double quantity, double portions}) =>
       MealEntry(
         meal: meal ?? this.meal,
         foodItem: foodItem ?? this.foodItem,
@@ -853,7 +854,7 @@ class MealEntry extends DataClass implements Insertable<MealEntry> {
 class MealEntriesCompanion extends UpdateCompanion<MealEntry> {
   final Value<int> meal;
   final Value<int> foodItem;
-  final Value<int> quantity;
+  final Value<double> quantity;
   final Value<double> portions;
   const MealEntriesCompanion({
     this.meal = const Value.absent(),
@@ -871,7 +872,7 @@ class MealEntriesCompanion extends UpdateCompanion<MealEntry> {
   static Insertable<MealEntry> custom({
     Expression<int> meal,
     Expression<int> foodItem,
-    Expression<int> quantity,
+    Expression<double> quantity,
     Expression<double> portions,
   }) {
     return RawValuesInsertable({
@@ -885,7 +886,7 @@ class MealEntriesCompanion extends UpdateCompanion<MealEntry> {
   MealEntriesCompanion copyWith(
       {Value<int> meal,
       Value<int> foodItem,
-      Value<int> quantity,
+      Value<double> quantity,
       Value<double> portions}) {
     return MealEntriesCompanion(
       meal: meal ?? this.meal,
@@ -905,7 +906,7 @@ class MealEntriesCompanion extends UpdateCompanion<MealEntry> {
       map['food_item'] = Variable<int>(foodItem.value);
     }
     if (quantity.present) {
-      map['quantity'] = Variable<int>(quantity.value);
+      map['quantity'] = Variable<double>(quantity.value);
     }
     if (portions.present) {
       map['portions'] = Variable<double>(portions.value);
@@ -944,11 +945,11 @@ class $MealEntriesTable extends MealEntries
   }
 
   final VerificationMeta _quantityMeta = const VerificationMeta('quantity');
-  GeneratedIntColumn _quantity;
+  GeneratedRealColumn _quantity;
   @override
-  GeneratedIntColumn get quantity => _quantity ??= _constructQuantity();
-  GeneratedIntColumn _constructQuantity() {
-    return GeneratedIntColumn(
+  GeneratedRealColumn get quantity => _quantity ??= _constructQuantity();
+  GeneratedRealColumn _constructQuantity() {
+    return GeneratedRealColumn(
       'quantity',
       $tableName,
       true,
