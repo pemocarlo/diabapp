@@ -42,11 +42,27 @@ class MealItems with ChangeNotifier {
   // List<Foodinfo> foodList = [];
   List<MyFoodItem> foodItems = [];
   String mealName = "";
-  String searchType = "Food";
+  SearchFilter searchType = SearchFilter.food;
+  String searchTitle = "Search Food";
   // void addFood(Foodinfo value) {
   //   foodList.add(value);
   //   notifyListeners();
   // }
+
+  void changeSearchTitle(SearchFilter type) {
+    switch (type) {
+      case SearchFilter.food:
+        searchTitle = "Search Food";
+        searchType = type;
+        break;
+      case SearchFilter.meal:
+        searchTitle = "Search Meal";
+        searchType = type;
+        break;
+      default:
+    }
+    notifyListeners();
+  }
 
   void addFoodItem(Foodinfo value) {
     foodItems.add(MyFoodItem(value));
@@ -115,3 +131,5 @@ class MyFoodItem {
     this.quantity = 100,
   ]);
 }
+
+enum SearchFilter { food, meal }
