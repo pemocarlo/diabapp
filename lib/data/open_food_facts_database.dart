@@ -38,7 +38,7 @@ class Meals extends Table {
 class MealEntries extends Table {
   IntColumn get meal => integer()();
   IntColumn get foodItem => integer()();
-  IntColumn get quantity => integer().nullable()();
+  RealColumn get quantity => real().nullable()();
   RealColumn get portions => real().nullable()();
 }
 
@@ -87,7 +87,7 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
           meal: meal.id,
           foodItem: item.myItem.code,
           portions: item.portions,
-          quantity: 1,
+          quantity: item.quantity,
         ));
       }
     });
@@ -163,10 +163,12 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
         for (var row in rows) {
           final item = row.readTable(foodinformation);
           final portions = row.readTable(mealEntries).portions;
-          // final item = row.readTable(foodinformation);
+          final quantity = row.readTable(mealEntries).quantity;
           final id = row.readTable(mealEntries).meal;
 
-          idToItems.putIfAbsent(id, () => []).add(MyFoodItem(item, portions));
+          idToItems
+              .putIfAbsent(id, () => [])
+              .add(MyFoodItem(item, portions, quantity));
         }
         print("watch all meals");
         for (var id in ids) {
@@ -213,10 +215,12 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
         for (var row in rows) {
           final item = row.readTable(foodinformation);
           final portions = row.readTable(mealEntries).portions;
-          // final item = row.readTable(foodinformation);
+          final quantity = row.readTable(mealEntries).quantity;
           final id = row.readTable(mealEntries).meal;
 
-          idToItems.putIfAbsent(id, () => []).add(MyFoodItem(item, portions));
+          idToItems
+              .putIfAbsent(id, () => [])
+              .add(MyFoodItem(item, portions, quantity));
         }
         print("watch all meals");
         // finally, all that's left is to merge the map of carts with the map of
