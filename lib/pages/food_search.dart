@@ -50,8 +50,8 @@ class _FoodSearchState extends State<FoodSearch> {
                   subtitle = (List<MealWithFoodItems> list, index) =>
                       list[index].meal.name;
                   onTap = (List<MealWithFoodItems> list, index) {
-                    // Provider.of<MealItems>(context, listen: false)
-                    //     .replaceFoodList(list[index].foodItems);
+                    Provider.of<MealItems>(context, listen: false)
+                        .replaceFoodList(list[index].foodItems);
                   };
                   delegate = DataSearch<MealWithFoodItems>(
                       queryDB, title, subtitle, onTap,
@@ -126,10 +126,10 @@ class _FoodListState extends State<FoodList> {
                       Icons.restaurant,
                       size: 50.0,
                     ),
-                    title: Text(myMeal.foodItems[index].item.productName ??
+                    title: Text(myMeal.foodItems[index].myItem.productName ??
                         "undefined"),
-                    subtitle: Text(
-                        myMeal.foodItems[index].item.brands ?? "Unknown brand"),
+                    subtitle: Text(myMeal.foodItems[index].myItem.brands ??
+                        "Unknown brand"),
                   ),
                 ),
                 myMeal.foodItems[index].portions != 0
@@ -182,7 +182,7 @@ class TextAndIconButton extends StatelessWidget {
                   foodDb
                       .createEmptyMeal(_textFieldController.text)
                       .then((value) {
-                    value.foodItems = fooditems.map((e) => e.item).toList();
+                    value.foodItems = fooditems;
                     foodDb.writeMeal(value);
                   });
                   Navigator.of(context).pop();

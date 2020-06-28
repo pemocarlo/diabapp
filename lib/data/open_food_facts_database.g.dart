@@ -759,17 +759,25 @@ class MealEntry extends DataClass implements Insertable<MealEntry> {
   final int meal;
   final int foodItem;
   final int quantity;
-  MealEntry({@required this.meal, @required this.foodItem, this.quantity});
+  final double portions;
+  MealEntry(
+      {@required this.meal,
+      @required this.foodItem,
+      this.quantity,
+      this.portions});
   factory MealEntry.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
+    final doubleType = db.typeSystem.forDartType<double>();
     return MealEntry(
       meal: intType.mapFromDatabaseResponse(data['${effectivePrefix}meal']),
       foodItem:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}food_item']),
       quantity:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}quantity']),
+      portions: doubleType
+          .mapFromDatabaseResponse(data['${effectivePrefix}portions']),
     );
   }
   @override
@@ -784,6 +792,9 @@ class MealEntry extends DataClass implements Insertable<MealEntry> {
     if (!nullToAbsent || quantity != null) {
       map['quantity'] = Variable<int>(quantity);
     }
+    if (!nullToAbsent || portions != null) {
+      map['portions'] = Variable<double>(portions);
+    }
     return map;
   }
 
@@ -794,6 +805,7 @@ class MealEntry extends DataClass implements Insertable<MealEntry> {
       meal: serializer.fromJson<int>(json['meal']),
       foodItem: serializer.fromJson<int>(json['foodItem']),
       quantity: serializer.fromJson<int>(json['quantity']),
+      portions: serializer.fromJson<double>(json['portions']),
     );
   }
   @override
@@ -803,69 +815,83 @@ class MealEntry extends DataClass implements Insertable<MealEntry> {
       'meal': serializer.toJson<int>(meal),
       'foodItem': serializer.toJson<int>(foodItem),
       'quantity': serializer.toJson<int>(quantity),
+      'portions': serializer.toJson<double>(portions),
     };
   }
 
-  MealEntry copyWith({int meal, int foodItem, int quantity}) => MealEntry(
+  MealEntry copyWith({int meal, int foodItem, int quantity, double portions}) =>
+      MealEntry(
         meal: meal ?? this.meal,
         foodItem: foodItem ?? this.foodItem,
         quantity: quantity ?? this.quantity,
+        portions: portions ?? this.portions,
       );
   @override
   String toString() {
     return (StringBuffer('MealEntry(')
           ..write('meal: $meal, ')
           ..write('foodItem: $foodItem, ')
-          ..write('quantity: $quantity')
+          ..write('quantity: $quantity, ')
+          ..write('portions: $portions')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(meal.hashCode, $mrjc(foodItem.hashCode, quantity.hashCode)));
+  int get hashCode => $mrjf($mrjc(meal.hashCode,
+      $mrjc(foodItem.hashCode, $mrjc(quantity.hashCode, portions.hashCode))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is MealEntry &&
           other.meal == this.meal &&
           other.foodItem == this.foodItem &&
-          other.quantity == this.quantity);
+          other.quantity == this.quantity &&
+          other.portions == this.portions);
 }
 
 class MealEntriesCompanion extends UpdateCompanion<MealEntry> {
   final Value<int> meal;
   final Value<int> foodItem;
   final Value<int> quantity;
+  final Value<double> portions;
   const MealEntriesCompanion({
     this.meal = const Value.absent(),
     this.foodItem = const Value.absent(),
     this.quantity = const Value.absent(),
+    this.portions = const Value.absent(),
   });
   MealEntriesCompanion.insert({
     @required int meal,
     @required int foodItem,
     this.quantity = const Value.absent(),
+    this.portions = const Value.absent(),
   })  : meal = Value(meal),
         foodItem = Value(foodItem);
   static Insertable<MealEntry> custom({
     Expression<int> meal,
     Expression<int> foodItem,
     Expression<int> quantity,
+    Expression<double> portions,
   }) {
     return RawValuesInsertable({
       if (meal != null) 'meal': meal,
       if (foodItem != null) 'food_item': foodItem,
       if (quantity != null) 'quantity': quantity,
+      if (portions != null) 'portions': portions,
     });
   }
 
   MealEntriesCompanion copyWith(
-      {Value<int> meal, Value<int> foodItem, Value<int> quantity}) {
+      {Value<int> meal,
+      Value<int> foodItem,
+      Value<int> quantity,
+      Value<double> portions}) {
     return MealEntriesCompanion(
       meal: meal ?? this.meal,
       foodItem: foodItem ?? this.foodItem,
       quantity: quantity ?? this.quantity,
+      portions: portions ?? this.portions,
     );
   }
 
@@ -880,6 +906,9 @@ class MealEntriesCompanion extends UpdateCompanion<MealEntry> {
     }
     if (quantity.present) {
       map['quantity'] = Variable<int>(quantity.value);
+    }
+    if (portions.present) {
+      map['portions'] = Variable<double>(portions.value);
     }
     return map;
   }
@@ -926,8 +955,20 @@ class $MealEntriesTable extends MealEntries
     );
   }
 
+  final VerificationMeta _portionsMeta = const VerificationMeta('portions');
+  GeneratedRealColumn _portions;
   @override
-  List<GeneratedColumn> get $columns => [meal, foodItem, quantity];
+  GeneratedRealColumn get portions => _portions ??= _constructPortions();
+  GeneratedRealColumn _constructPortions() {
+    return GeneratedRealColumn(
+      'portions',
+      $tableName,
+      true,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [meal, foodItem, quantity, portions];
   @override
   $MealEntriesTable get asDslTable => this;
   @override
@@ -954,6 +995,10 @@ class $MealEntriesTable extends MealEntries
     if (data.containsKey('quantity')) {
       context.handle(_quantityMeta,
           quantity.isAcceptableOrUnknown(data['quantity'], _quantityMeta));
+    }
+    if (data.containsKey('portions')) {
+      context.handle(_portionsMeta,
+          portions.isAcceptableOrUnknown(data['portions'], _portionsMeta));
     }
     return context;
   }

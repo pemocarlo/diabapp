@@ -53,7 +53,9 @@ class MealItems with ChangeNotifier {
     notifyListeners();
   }
 
-  void replaceFoodList(List<MealWithFoodItems> value) {
+  void replaceFoodList(List<MyFoodItem> value) {
+    foodItems.clear();
+    foodItems = value;
     notifyListeners();
   }
 
@@ -98,8 +100,8 @@ class MealItems with ChangeNotifier {
 // }
 
 class MyFoodItem {
-  Foodinfo item;
-  double portions = 1;
+  Foodinfo myItem;
+  double portions;
 
-  MyFoodItem(this.item);
+  MyFoodItem(this.myItem, [this.portions = 1]);
 }
