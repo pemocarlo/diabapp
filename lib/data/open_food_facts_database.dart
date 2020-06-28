@@ -6,6 +6,7 @@ import 'package:moor_ffi/moor_ffi.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:rxdart/rxdart.dart';
+import 'package:diabapp/main.dart';
 
 part 'open_food_facts_database.g.dart';
 
@@ -38,11 +39,12 @@ class MealEntries extends Table {
   IntColumn get meal => integer()();
   IntColumn get foodItem => integer()();
   IntColumn get quantity => integer().nullable()();
+  RealColumn get portions => real().nullable()();
 }
 
 class MealWithFoodItems {
   Meal meal;
-  List<Foodinfo> foodItems;
+  List<MyFoodItem> foodItems;
   MealWithFoodItems(this.meal, this.foodItems);
 }
 
@@ -83,7 +85,8 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
       for (final item in entry.foodItems) {
         await into(mealEntries).insert(MealEntry(
           meal: meal.id,
-          foodItem: item.code,
+          foodItem: item.myItem.code,
+          portions: item.portions,
           quantity: 1,
         ));
       }
@@ -98,29 +101,35 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
     return MealWithFoodItems(cart, []);
   }
 
-  Stream<MealWithFoodItems> watchMeal(int id) {
-    final mealQuery = select(meals)..where((meal) => meal.id.equals(id));
+  // Stream<MealWithFoodItems> watchMeal(int id) {
+  //   final mealQuery = select(meals)..where((meal) => meal.id.equals(id));
 
-    final contentQuery = select(mealEntries).join(
-      [
-        innerJoin(
-          foodinformation,
-          foodinformation.code.equalsExp(mealEntries.foodItem),
-        ),
-      ],
-    )..where(mealEntries.meal.equals(id));
+  //   final contentQuery = select(mealEntries).join(
+  //     [
+  //       innerJoin(
+  //         foodinformation,
+  //         foodinformation.code.equalsExp(mealEntries.foodItem),
+  //       ),
+  //     ],
+  //   )..where(mealEntries.meal.equals(id));
 
-    final cartStream = mealQuery.watchSingle();
+  //   final cartStream = mealQuery.watchSingle();
 
-    final contentStream = contentQuery.watch().map((rows) {
-      return rows.map((row) => row.readTable(foodinformation)).toList();
-    });
+  //   final contentStream = contentQuery.watch().map((rows) {
+  //     var result = rows.map((row) {
+  //       MyFoodItem singleObj;
+  //       singleObj.myItem = row.readTable(foodinformation);
+  //       singleObj.portions = row.readTable(mealEntries).portions;
+  //       return singleObj;
+  //     }).toList();
+  //     return result;
+  //   });
 
-    return CombineLatestStream.combine2(cartStream, contentStream,
-        (Meal meal, List<Foodinfo> items) {
-      return MealWithFoodItems(meal, items);
-    });
-  }
+  //   return CombineLatestStream.combine2(cartStream, contentStream,
+  //       (Meal meal, List<MyFoodItem> items) {
+  //     return MealWithFoodItems(meal, items);
+  //   });
+  // }
 
   Stream<List<MealWithFoodItems>> watchMealContains(String value) {
     // start by watching all carts
@@ -147,17 +156,22 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
       return entryQuery.watch().map((rows) {
         // Store the list of entries for each cart, again using maps for faster
         // lookups.
-        final idToItems = <int, List<Foodinfo>>{};
+        final idToItems = <int, List<MyFoodItem>>{};
 
         // for each entry (row) that is included in a cart, put it in the map
         // of items.
         for (var row in rows) {
           final item = row.readTable(foodinformation);
+          final portions = row.readTable(mealEntries).portions;
+          // final item = row.readTable(foodinformation);
           final id = row.readTable(mealEntries).meal;
 
-          idToItems.putIfAbsent(id, () => []).add(item);
+          idToItems.putIfAbsent(id, () => []).add(MyFoodItem(item, portions));
         }
         print("watch all meals");
+        for (var id in ids) {
+          print(idToCart[id].name);
+        }
         // finally, all that's left is to merge the map of carts with the map of
         // entries
         return [
@@ -192,15 +206,17 @@ class OpenFoodFactsDataBase extends _$OpenFoodFactsDataBase {
       return entryQuery.watch().map((rows) {
         // Store the list of entries for each cart, again using maps for faster
         // lookups.
-        final idToItems = <int, List<Foodinfo>>{};
+        final idToItems = <int, List<MyFoodItem>>{};
 
         // for each entry (row) that is included in a cart, put it in the map
         // of items.
         for (var row in rows) {
           final item = row.readTable(foodinformation);
+          final portions = row.readTable(mealEntries).portions;
+          // final item = row.readTable(foodinformation);
           final id = row.readTable(mealEntries).meal;
 
-          idToItems.putIfAbsent(id, () => []).add(item);
+          idToItems.putIfAbsent(id, () => []).add(MyFoodItem(item, portions));
         }
         print("watch all meals");
         // finally, all that's left is to merge the map of carts with the map of
@@ -221,7 +237,7 @@ LazyDatabase _openConnection() {
     // for your app.
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'open_food_facts_germany.db'));
-    // await file.delete();
+    await file.delete();
     if (await file.exists()) {
       print("File exists");
     } else {
